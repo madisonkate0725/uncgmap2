@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UNCG Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+   crossorigin=""></script>
+   <script src = "./data/old_well_4326.geojson"></script>
+
+  <style type="text/css">
+    body {
+       margin: 0;
+       padding: 0;
+    }
+    html, body, #map{
+       width: 100%;
+       height: 100%;
+    }
+  
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+      var map = L.map('map').setView([36.06867343023731, -79.81052056016608], 20.0);
+
+      var Watercolormap = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 1,
+	maxZoom: 16,
+	ext: 'jpg'
+  })
+
+  var daPhoto = L.tileLayer('./Tiles/{z}/{x}/{y}.png', {
+  minZoom: 12,
+  maxZoom: 16,
+  tms: false,
+  attribution: 'USGS'
+  })
+
+
+  L.geoJSON(yumyums).addto(map);
+var yumyumsicon = L.icon({ 
+    iconUrl: 'https://www.pngfind.com/pngs/m/55-554961_breakfast-hot-dog-fast-food-clip-art-hot.png',
+    iconSize: [50,50], 
+popupAnchor: [0,0]});
+
+var customPopup = "Yum Yums<br/><img src='https://media.bizj.us/view/img/10319765/yum-yums*750xx1653-930-12-0.jpg'width='100px'/>";
+L.geoJSON(yumyums, { 
+pointToLayer: function (feature, latlng) { 
+return L.marker(latlng, {icon: yumyumsicon});}}) 
+.bindPopup(customPopup) 
+
+var daTiles = {
+  "Water Color Map" : Watercolormap,
+  "USGS Tile" : daPhoto
+}
+
+var daPopup = {
+ "Yum Yums Location" : customPopup
+}
+
+L.control.layers(daTiles,daPopup).addto(map);
+
+  </script>
+
+</body>
+</html>
